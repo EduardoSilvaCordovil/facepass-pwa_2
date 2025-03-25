@@ -11,7 +11,7 @@
 }*/
 
 let installEvent = null;
-let installButton = document.getElementById("installButton");
+let installButton = document.getElementById("install");
 let enableButton = document.getElementById("enable");
 
 enableButton.addEventListener("click", function () {
