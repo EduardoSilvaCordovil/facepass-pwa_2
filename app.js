@@ -10,81 +10,56 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// app.js
-let deferredPrompt;
+// Variáveis de controle
+let deferredPrompt; // Renomeado para clareza [[1]]
+const installButton = document.getElementById('installButton');
 
-// Detecta quando o navegador está pronto para instalar a PWA
+// Verifica se o usuário já instalou a PWA
+if (localStorage.getItem('pwa-installed') === 'true') {
+  hideInstallButton(); // Oculta botão se já instalado
+}
+
+// Evento de pré-instalação (disparado pelo navegador)
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
-  deferredPrompt = event;
-  showInstallButton();
+  deferredPrompt = event; // Armazena evento para uso posterior
+  showInstallButton(); // Exibe botão de instalação
 });
 
-// Exibe o botão de instalação
-function showInstallButton() {
-  const installButton = document.getElementById('installButton');
-  if (installButton) installButton.style.display = 'block';
-}
-
-// Oculta o botão após a instalação
-function hideInstallButton() {
-  const installButton = document.getElementById('installButton');
-  if (installButton) installButton.style.display = 'none';
-}
-
-// Trata o clique no botão de instalação
-document.getElementById('installButton').addEventListener('click', () => {
+// Evento de clique no botão de instalação
+installButton?.addEventListener('click', () => {
   if (deferredPrompt) {
-    deferredPrompt.prompt(); // Mostra o prompt nativo
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('Usuário instalou a PWA');
+    deferredPrompt.prompt(); // Mostra prompt nativo
+    deferredPrompt.userChoice.then((choice) => {
+      if (choice.outcome === 'accepted') {
+        localStorage.setItem('pwa-installed', 'true'); // Marca como instalado
+        hideInstallButton();
       }
-      deferredPrompt = null;
+      deferredPrompt = null; // Limpa evento
     });
   }
 });
 
-// Detecta quando a PWA foi instalada
-window.addEventListener('appinstalled', () => {
-  console.log('PWA instalada com sucesso');
-  hideInstallButton();
-});
-
-// PWA Installation Script
-/*let deferredPrompt;
-const installButton = document.getElementById('installButton');
-
-// Show install button when PWA is installable
-window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault();
-  deferredPrompt = event;
+// Função para exibir botão de instalação
+function showInstallButton() {
   installButton.style.display = 'block';
-});
+}
 
-// Handle installation when button is clicked
-installButton.addEventListener('click', async () => {
-  if (deferredPrompt) {
-    try {
-      await deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-
-      if (choiceResult.outcome === 'accepted') {
-        console.log('Usuário aceitou a instalação');
-      } else {
-        console.log('Usuário rejeitou a instalação');
-      }
-
-      deferredPrompt = null;
-      installButton.style.display = 'none';
-    } catch (error) {
-      console.error('Erro durante a instalação:', error);
-    }
-  }
-});
-
-// Hide install button after successful installation
-window.addEventListener('appinstalled', () => {
-  console.log('PWA instalada com sucesso');
+// Função para ocultar botão de instalação
+function hideInstallButton() {
   installButton.style.display = 'none';
-});*/
+}
+
+// Cache dinâmico de recursos (apenas para demonstração)
+function cacheResources() {
+  caches.open('pwa-cache').then(cache => {
+    cache.addAll([
+      '/',
+      '/index.html',
+      '/style.css',
+      '/app.js',
+      '/icon.png'
+    ]);
+  });
+}
+cacheResources(); // Executa cache inicial
