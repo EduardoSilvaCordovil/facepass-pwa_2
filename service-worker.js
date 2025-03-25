@@ -4,7 +4,9 @@ self.addEventListener('install', (e) => {
 
   let cache = caches.open(cacheName).then((c) => {
     c.addAll([
-      // nothing
+      "/",
+      "/index.html",
+      "/style.css"
     ]);
   });
 

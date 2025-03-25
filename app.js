@@ -1,4 +1,4 @@
-let installButton = document.getElementById("install");
+let installButton = document.getElementById("installButton");
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -13,86 +13,31 @@ if ('serviceWorker' in navigator) {
 }
 
 let deferredPrompt;
-// Detecta o evento de instalação
+
+// Evento disparado quando o navegador está pronto para mostrar o prompt de instalação
 window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    deferredPrompt = event;
-    showInstallButton();
+  // Previne o prompt automático
+  event.preventDefault();
+  // Armazena o evento para uso posterior
+  deferredPrompt = event;
+  // Exibe o botão de instalação
+  document.getElementById('installButton-btn').style.display = 'block';
 });
 
-// Exibe o botão de instalação
-function showInstallButton() {
-    const installButton = document.getElementById('installButton');
-    const installInstructions = document.getElementById('installInstructions');
-    if (installButton && installInstructions) {
-        installButton.style.display = 'block';
-        installInstructions.style.display = 'block';
-    }
-}
-
-// Oculta os botões após a instalação
-function hideInstallButtons() {
-    const installButton = document.getElementById('installButton');
-    const installInstructions = document.getElementById('installInstructions');
-    const downloadButton = document.getElementById('downloadButton');
-
-    if (installButton) installButton.style.display = 'none';
-    if (installInstructions) installInstructions.style.display = 'none';
-    if (downloadButton) downloadButton.style.display = 'none';
-}
-
-// Inicia o processo de instalação ao clicar no botão
-document.getElementById('installButton').addEventListener('click', () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('Usuário aceitou a instalação');
-            } else {
-                console.log('Usuário rejeitou a instalação');
-            }
-            deferredPrompt = null;
-        });
-    }
+// Adiciona o evento de clique ao botão de instalação
+document.getElementById('installButton-btn').addEventListener('click', () => {
+  if (deferredPrompt) {
+    // Mostra o prompt de instalação
+    deferredPrompt.prompt();
+    // Espera pela escolha do usuário
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Usuário aceitou a instalação');
+      } else {
+        console.log('Usuário recusou a instalação');
+      }
+      // Limpa o evento armazenado
+      deferredPrompt = null;
+    });
+  }
 });
-
-// Detecta quando a PWA foi instalada
-window.addEventListener('appinstalled', () => {
-    console.log('PWA instalada com sucesso');
-    hideInstallButtons();
-});
-
-// Detecta o evento de instalação
-/*window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    deferredPrompt = event;
-    showInstallButton();
-});
-
-// Exibe o botão de instalação
-function showInstallButton() {
-    const installButton = document.getElementById('installButton');
-    if (installButton) {
-        installButton.style.display = 'block';
-    }
-}
-
-// Inicia o processo de instalação ao clicar no botão
-document.getElementById('installButton').addEventListener('click', () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('Usuário aceitou a instalação');
-            } else {
-                console.log('Usuário rejeitou a instalação');
-            }
-            deferredPrompt = null;
-        });
-    }
-    if (installButton) {
-        installButton.addEventListener("click", function () {
-            installEvent.prompt();
-        });
-    }
-});*/
