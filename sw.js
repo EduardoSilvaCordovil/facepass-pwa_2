@@ -1,4 +1,4 @@
-let cacheName = 'cache-v1';
+const CACHE_NAME = 'facepass-v1';
 
 self.addEventListener('install', (e) => {
 
@@ -9,6 +9,15 @@ self.addEventListener('install', (e) => {
   });
 
   e.waitUntil(cache);
+});
+
+// Instalação do Service Worker
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(urlsToCache);
+    })
+  );
 });
 
 self.addEventListener('fetch', function (event) {
