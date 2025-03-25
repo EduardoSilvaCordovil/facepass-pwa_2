@@ -9,7 +9,7 @@
     "scope": "/facepass-pwa_2/",
     "description": "Segurança digital com um olhar para o futuro",
     "theme_color": "#fcc014",
-    "background_color": "##262c31",
+    "background_color": "#262c31",
     "icons": [
         {
             "purpose": "maskable",
