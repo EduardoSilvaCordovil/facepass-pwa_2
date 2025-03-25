@@ -1,12 +1,12 @@
 const CACHE_NAME = 'facepass-v1';
 
-self.addEventListener("install", function (event) {
+self.addEventListener("installButton", function (event) {
   event.waitUntil(
     caches.open("facepass-v1").then(function (cache) {
       return cache.addAll([
         "/",
         "/style.css",
-        "/script.js",
+        "/app.js",
       ]);
     })
   );
