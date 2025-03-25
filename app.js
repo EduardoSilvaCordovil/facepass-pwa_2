@@ -45,7 +45,7 @@ function startPwa(firstStart) {
     e.preventDefault();
     console.log("Ready to install...");
     installEvent = e;
-    document.getElementById("install").style.display = "initial";
+    document.getElementById("installButton").style.display = "initial";
   });
 
   setTimeout(cacheLinks, 500);
