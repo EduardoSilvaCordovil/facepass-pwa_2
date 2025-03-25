@@ -1,4 +1,4 @@
-if ('serviceWorker' in navigator) {
+/*if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
@@ -8,58 +8,62 @@ if ('serviceWorker' in navigator) {
         console.error('Falha ao registrar o Service Worker:', error);
       });
   });
-}
+}*/
 
-// Variáveis de controle
-let deferredPrompt; // Renomeado para clareza [[1]]
-const installButton = document.getElementById('installButton');
+let installEvent = null;
+let installButton = document.getElementById("installButton");
+let enableButton = document.getElementById("enable");
 
-// Verifica se o usuário já instalou a PWA
-if (localStorage.getItem('pwa-installed') === 'true') {
-  hideInstallButton(); // Oculta botão se já instalado
-}
-
-// Evento de pré-instalação (disparado pelo navegador)
-window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault();
-  deferredPrompt = event; // Armazena evento para uso posterior
-  showInstallButton(); // Exibe botão de instalação
+enableButton.addEventListener("click", function () {
+  this.disabled = true;
+  startPwa(true);
 });
 
-// Evento de clique no botão de instalação
-installButton?.addEventListener('click', () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt(); // Mostra prompt nativo
-    deferredPrompt.userChoice.then((choice) => {
-      if (choice.outcome === 'accepted') {
-        localStorage.setItem('pwa-installed', 'true'); // Marca como instalado
-        hideInstallButton();
-      }
-      deferredPrompt = null; // Limpa evento
+if (localStorage["pwa-enabled"]) {
+  startPwa();
+}
+
+function startPwa(firstStart) {
+  localStorage["pwa-enabled"] = true;
+
+  if (firstStart) {
+    location.reload();
+  }
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(registration => {
+        console.log("Service Worker is registered", registration);
+        enableButton.parentNode.remove();
+      })
+      .catch(err => {
+        console.error("Registration failed:", err);
+      });
+  });
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    console.log("Ready to install...");
+    installEvent = e;
+    document.getElementById("install").style.display = "initial";
+  });
+
+  setTimeout(cacheLinks, 500);
+
+  function cacheLinks() {
+    caches.open("facepass-v1").then(function (cache) {
+      let linksFound = [];
+      document.querySelectorAll("a").forEach(function (a) {
+        linksFound.push(a.href);
+      });
+
+      cache.addAll(linksFound);
     });
   }
-});
 
-// Função para exibir botão de instalação
-function showInstallButton() {
-  installButton.style.display = 'block';
+  if (installButton) {
+    installButton.addEventListener("click", function () {
+      installEvent.prompt();
+    });
+  }
 }
-
-// Função para ocultar botão de instalação
-function hideInstallButton() {
-  installButton.style.display = 'none';
-}
-
-// Cache dinâmico de recursos (apenas para demonstração)
-function cacheResources() {
-  caches.open('pwa-cache').then(cache => {
-    cache.addAll([
-      '/',
-      '/index.html',
-      '/style.css',
-      '/app.js',
-      '/icon.png'
-    ]);
-  });
-}
-cacheResources(); // Executa cache inicial
