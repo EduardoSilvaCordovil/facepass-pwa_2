@@ -21,11 +21,11 @@ window.addEventListener('beforeinstallprompt', (event) => {
   // Armazena o evento para uso posterior
   deferredPrompt = event;
   // Exibe o botão de instalação
-  document.getElementById('installButton-btn').style.display = 'block';
+  document.getElementById('installButton').style.display = 'block';
 });
 
 // Adiciona o evento de clique ao botão de instalação
-document.getElementById('installButton-btn').addEventListener('click', () => {
+document.getElementById('installButton').addEventListener('click', () => {
   if (deferredPrompt) {
     // Mostra o prompt de instalação
     deferredPrompt.prompt();
