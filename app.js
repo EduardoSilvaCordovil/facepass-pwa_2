@@ -45,13 +45,13 @@ function startPwa(firstStart) {
     e.preventDefault();
     console.log("Ready to install...");
     installEvent = e;
-    document.getElementById("installButton").style.display = "initial";
+    document.getElementById("install").style.display = "initial";
   });
 
   setTimeout(cacheLinks, 500);
 
   function cacheLinks() {
-    caches.open("facepass-v1").then(function (cache) {
+    caches.open("pwa").then(function (cache) {
       let linksFound = [];
       document.querySelectorAll("a").forEach(function (a) {
         linksFound.push(a.href);
