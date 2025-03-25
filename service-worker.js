@@ -2,7 +2,7 @@ const CACHE_NAME = 'facepass-v1';
 
 self.addEventListener("install", function (event) {
   event.waitUntil(
-    caches.open("pwa").then(function (cache) {
+    caches.open("facepass-v1").then(function (cache) {
       return cache.addAll([
         "/",
         "/style.css",
