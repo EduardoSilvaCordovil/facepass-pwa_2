@@ -72,8 +72,8 @@ if ('serviceWorker' in navigator) {
 
 // Instalação da PWA
 let deferredInstallPrompt = null;
-const installContainer = document.getElementById('install-container');
-const installBtn = document.getElementById('install-btn');
+const installContainer = document.getElementById('install');
+const install = document.getElementById('install');
 
 // Evento disparado quando o app está pronto para ser instalado
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -88,7 +88,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 // Evento de clique no botão de instalação
-installBtn.addEventListener('click', async () => {
+install.addEventListener('click', async () => {
   if (deferredInstallPrompt) {
       // Mostra o prompt de instalação
       deferredInstallPrompt.prompt();
