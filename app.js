@@ -13,10 +13,6 @@
 let installEvent = null;
 let installButton = document.getElementById("install");
 
-if (localStorage["pwa-enabled"]) {
-  startPwa();
-}
-
 function startPwa(firstStart) {
   localStorage["pwa-enabled"] = true;
 
