@@ -1,69 +1,59 @@
-/*if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
-        console.log('Service Worker registrado com sucesso:', registration);
+        console.log('✅ Service Worker registrado com sucesso:', registration);
       })
       .catch((error) => {
-        console.error('Falha ao registrar o Service Worker:', error);
+        console.error('❌ Falha ao registrar o Service Worker:', error);
       });
   });
-}*/
+}
 
 let installEvent = null;
 let installButton = document.getElementById("install");
 let enableButton = document.getElementById("enable");
 
-enableButton.addEventListener("click", function () {
-  this.disabled = true;
-  startPwa(true);
-});
+if (enableButton) {
+  enableButton.addEventListener("click", function () {
+    this.disabled = true;
+    startPwa(true);
+  });
+}
 
-if (localStorage["pwa-enabled"]) {
+if (localStorage.getItem("pwa-enabled")) {
   startPwa();
 }
 
 function startPwa(firstStart) {
-  localStorage["pwa-enabled"] = true;
+  localStorage.setItem("pwa-enabled", "true");
 
   if (firstStart) {
     location.reload();
   }
 
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then(registration => {
-        console.log("Service Worker is registered", registration);
-        enableButton.parentNode.remove();
-      })
-      .catch(err => {
-        console.error("Registration failed:", err);
-      });
-  });
-
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
-    console.log("Ready to install...");
+    console.log("ℹ️ PWA pronto para instalação...");
     installEvent = e;
-    document.getElementById("install").style.display = "initial";
+    if (installButton) {
+      installButton.style.display = "block";
+      installButton.addEventListener("click", () => {
+        installEvent.prompt();
+      });
+    }
   });
 
-  setTimeout(cacheLinks, 500);
-
-  function cacheLinks() {
-    caches.open("pwa").then(function (cache) {
+  // Cacheia apenas links internos
+  setTimeout(() => {
+    caches.open("pwa").then((cache) => {
       let linksFound = [];
-      document.querySelectorAll("a").forEach(function (a) {
-        linksFound.push(a.href);
+      document.querySelectorAll("a").forEach((a) => {
+        if (a.href.startsWith(location.origin)) {
+          linksFound.push(a.href);
+        }
       });
-
-      cache.addAll(linksFound);
+      cache.addAll(linksFound).catch((err) => console.error("Erro ao adicionar ao cache:", err));
     });
-  }
-
-  if (installButton) {
-    installButton.addEventListener("click", function () {
-      installEvent.prompt();
-    });
-  }
+  }, 500);
 }

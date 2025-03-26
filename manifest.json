@@ -8,8 +8,8 @@
     "start_url": "/facepass-pwa_2",
     "scope": "/facepass-pwa_2",
     "description": "Segurança digital com um olhar para o futuro",
-    "theme_color": "#FCC014",
-    "background_color": "#262C31",
+    "theme_color":"#c5d1d3",
+    "background_color": "#424b66",
     "icons": [
         {
             "purpose": "maskable",
