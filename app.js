@@ -28,7 +28,6 @@ function startPwa(firstStart) {
     navigator.serviceWorker.register("service-worker.js")
       .then(registration => {
         console.log("Service Worker is registered", registration);
-        enableButton.parentNode.remove();
       })
       .catch(err => {
         console.error("Registration failed:", err);
