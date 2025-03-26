@@ -1,7 +1,41 @@
-body {
-    font-family: sans-serif;
-}
-
-#install {
-    display: none;
-}
+    html, body {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #445a97;
+        color: #fff;
+    }
+    #install {
+        display: none;
+    }
+    
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+      }
+      
+      button {
+        background: linear-gradient(135deg, #106f8b, #ddd5d5);
+        color: #910808;
+        border: none;
+        border-radius: 25px;
+        padding: 15px 30px;
+        font-size: 18px;
+        cursor: pointer;
+        outline: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background 0.3s ease, transform 0.3s ease;
+      }
+    
+      button:hover {
+        background: linear-gradient(135deg, #1AAB8A, #006f4f);
+      }
+      
+      button:active {
+        transform: scale(0.98);
+      }
+      

@@ -1,59 +1,148 @@
-if ('serviceWorker' in navigator) {
+let deferredPrompt;
+
+// Detecta o evento de instalação
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredPrompt = event;
+  showInstallButton();
+});
+
+// Exibe o botão de instalação
+function showInstallButton() {
+  const installButton = document.getElementById('install');
+  if (installButton) {
+    installButton.style.display = 'block';
+  }
+}
+
+// Inicia o processo de instalação ao clicar no botão
+document.getElementById('install').addEventListener('click', () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Usuário aceitou a instalação');
+      } else {
+        console.log('Usuário rejeitou a instalação');
+      }
+      deferredPrompt = null;
+    });
+  }
+});
+
+/*if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
-        console.log('✅ Service Worker registrado com sucesso:', registration);
+        console.log('Service Worker registrado com sucesso:', registration);
       })
       .catch((error) => {
-        console.error('❌ Falha ao registrar o Service Worker:', error);
+        console.error('Falha ao registrar o Service Worker:', error);
       });
   });
 }
 
 let installEvent = null;
 let installButton = document.getElementById("install");
-let enableButton = document.getElementById("enable");
-
-if (enableButton) {
-  enableButton.addEventListener("click", function () {
-    this.disabled = true;
-    startPwa(true);
-  });
-}
-
-if (localStorage.getItem("pwa-enabled")) {
-  startPwa();
-}
 
 function startPwa(firstStart) {
-  localStorage.setItem("pwa-enabled", "true");
+  localStorage["pwa-enabled"] = true;
 
   if (firstStart) {
     location.reload();
   }
 
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    console.log("ℹ️ PWA pronto para instalação...");
-    installEvent = e;
-    if (installButton) {
-      installButton.style.display = "block";
-      installButton.addEventListener("click", () => {
-        installEvent.prompt();
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(registration => {
+        console.log("Service Worker is registered", registration);
+      })
+      .catch(err => {
+        console.error("Registration failed:", err);
       });
-    }
   });
 
-  // Cacheia apenas links internos
-  setTimeout(() => {
-    caches.open("pwa").then((cache) => {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    console.log("Ready to install...");
+    installEvent = e;
+    document.getElementById("install").style.display = "initial";
+  });
+
+  setTimeout(cacheLinks, 500);
+
+  function cacheLinks() {
+    caches.open("pwa").then(function (cache) {
       let linksFound = [];
-      document.querySelectorAll("a").forEach((a) => {
-        if (a.href.startsWith(location.origin)) {
-          linksFound.push(a.href);
-        }
+      document.querySelectorAll("a").forEach(function (a) {
+        linksFound.push(a.href);
       });
-      cache.addAll(linksFound).catch((err) => console.error("Erro ao adicionar ao cache:", err));
+
+      cache.addAll(linksFound);
     });
-  }, 500);
+  }
+
+  if (installButton) {
+    installButton.addEventListener("click", function () {
+      installEvent.prompt();
+    });
+  }
+} 
+
+// Configuração de Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js')
+          .then(registration => {
+              console.log('Service Worker registrado com sucesso:', registration);
+          })
+          .catch(error => {
+              console.error('Falha ao registrar o Service Worker:', error);
+          });
+  });
 }
+
+// Instalação da PWA
+let deferredInstallPrompt = null;
+const installContainer = document.getElementById('install');
+const install = document.getElementById('install');
+
+// Evento disparado quando o app está pronto para ser instalado
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Previne que o navegador mostre o banner de instalação padrão
+  e.preventDefault();
+  
+  // Guarda o evento para usar depois
+  deferredInstallPrompt = e;
+  
+  // Mostra o botão de instalação
+  installContainer.classList.remove('hidden');
+});
+
+// Evento de clique no botão de instalação
+install.addEventListener('click', async () => {
+  if (deferredInstallPrompt) {
+      // Mostra o prompt de instalação
+      deferredInstallPrompt.prompt();
+      
+      // Espera a escolha do usuário
+      const choiceResult = await deferredInstallPrompt.userChoice;
+      
+      if (choiceResult.outcome === 'accepted') {
+          console.log('Usuário aceitou a instalação');
+      } else {
+          console.log('Usuário recusou a instalação');
+      }
+      
+      // Limpa o prompt
+      deferredInstallPrompt = null;
+      
+      // Esconde o botão
+      installContainer.classList.add('hidden');
+  }
+});
+
+// Evento disparado após a instalação
+window.addEventListener('appinstalled', (e) => {
+  console.log('App foi instalado com sucesso');
+}); */
