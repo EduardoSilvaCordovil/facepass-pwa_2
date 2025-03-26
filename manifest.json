@@ -5,8 +5,8 @@
     "lang": "pt-BR",
     "name": "FacePass",
     "short_name": "FacePass",
-    "start_url": "./",
-    "scope": "./",
+    "start_url": "/?source=pwa",
+    "scope": ".",
     "description": "Segurança digital com um olhar para o futuro",
     "theme_color": "#FCC014",
     "background_color": "#262C31",
@@ -14,13 +14,13 @@
         {
             "purpose": "maskable",
             "sizes": "512x512",
-            "src": "./images/icon512_maskable.png",
+            "src": "images/icon512_maskable.png",
             "type": "image/png"
         },
         {
             "purpose": "any",
             "sizes": "512x512",
-            "src": "./images/icon512_rounded.png",
+            "src": "images/icon512_rounded.png",
             "type": "image/png"
         }
     ]
