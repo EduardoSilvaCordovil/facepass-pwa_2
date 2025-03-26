@@ -6,7 +6,7 @@
     "name": "FacePass",
     "short_name": "FacePass",
     "start_url": "/?source=pwa",
-    "scope": ".",
+    "scope": "/",
     "description": "Segurança digital com um olhar para o futuro",
     "theme_color": "#FCC014",
     "background_color": "#262C31",
