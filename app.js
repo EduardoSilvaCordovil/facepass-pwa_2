@@ -12,12 +12,6 @@
 
 let installEvent = null;
 let installButton = document.getElementById("install");
-let enableButton = document.getElementById("enable");
-
-enableButton.addEventListener("click", function () {
-  this.disabled = true;
-  startPwa(true);
-});
 
 if (localStorage["pwa-enabled"]) {
   startPwa();
